@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB ObjectId Decoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .output {
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>MongoDB ObjectId Decoder</h1>
+    
+    <div class="error" id="error"></div>
+
+    <input type="text" id="objectIdInput" placeholder="Enter a MongoDB ObjectId">
+    <button onclick="decodeObjectId()">Decode</button>
+
+    <div class="output" id="output"></div>
+
+    <div class="footer">
+        <p>Created by <a href="https://github.com/ExZyle" target="_blank">@ExZyle</a>.</p>
+    </div>
+
+    <script>
+        function decodeObjectId() {
+            const oidStr = document.getElementById("objectIdInput").value;
+            const errorDiv = document.getElementById("error");
+            const outputDiv = document.getElementById("output");
+            errorDiv.innerHTML = "";
+            outputDiv.innerHTML = "";
+
+            // Validate the ObjectId
+            if (!/^[0-9a-fA-F]{24}$/.test(oidStr)) {
+                errorDiv.innerHTML = "Invalid ObjectId format. Please provide a valid 24-character hexadecimal string.";
+                return;
+            }
+
+            // Convert the ObjectId string to a Buffer
+            const buffer = new Uint8Array(oidStr.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+
+            // Extract the timestamp (first 4 bytes)
+            const timestamp = new Date((buffer[0] << 24 | buffer[1] << 16 | buffer[2] << 8 | buffer[3]) * 1000);
+
+            // Extract the machine identifier (next 3 bytes)
+            const machineId = Array.from(buffer.slice(4, 7)).map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+            // Extract the process identifier (next 2 bytes)
+            const processId = (buffer[7] << 8 | buffer[8]);
+
+            // Extract the counter (last 3 bytes)
+            const counter = (buffer[9] << 16 | buffer[10] << 8 | buffer[11]);
+
+            // Display the details
+            outputDiv.innerHTML = `
+                <p><strong>ObjectId:</strong> ${oidStr}</p>
+                <p><strong>Timestamp:</strong> ${timestamp.toISOString()} (UTC)</p>
+                <p><strong>Timestamp (Local):</strong> ${timestamp.toLocaleString()}</p>
+                <p><strong>Machine Identifier:</strong> ${machineId}</p>
+                <p><strong>Process Identifier:</strong> ${processId}</p>
+                <p><strong>Counter:</strong> ${counter}</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>

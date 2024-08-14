@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB ObjectId Encoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="number"], input[type="datetime-local"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .output {
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>MongoDB ObjectId Encoder</h1>
+    
+    <div class="error" id="error"></div>
+
+    <label for="timestampInput">Timestamp:</label>
+    <input type="datetime-local" id="timestampInput">
+
+    <label for="machineIdInput">Machine Identifier (Hex, 3 bytes):</label>
+    <input type="text" id="machineIdInput" placeholder="Enter 6 hexadecimal characters (e.g., 5f1f77)" maxlength="6">
+
+    <label for="processIdInput">Process Identifier (Decimal, 2 bytes):</label>
+    <input type="number" id="processIdInput" placeholder="Enter a number between 0 and 65535" min="0" max="65535">
+
+    <label for="counterInput">Counter (Decimal, 3 bytes):</label>
+    <input type="number" id="counterInput" placeholder="Enter a number between 0 and 16777215" min="0" max="16777215">
+
+    <button onclick="encodeObjectId()">Generate ObjectId</button>
+
+    <div class="output" id="output"></div>
+
+    <div class="footer">
+      <p>Created by <a href="https://github.com/ExZyle" target="_blank">@ExZyle</a>.</p>
+    </div>
+
+    <script>
+        function encodeObjectId() {
+            const timestampInput = document.getElementById("timestampInput").value;
+            const machineIdInput = document.getElementById("machineIdInput").value;
+            const processIdInput = document.getElementById("processIdInput").value;
+            const counterInput = document.getElementById("counterInput").value;
+
+            const errorDiv = document.getElementById("error");
+            const outputDiv = document.getElementById("output");
+            errorDiv.innerHTML = "";
+            outputDiv.innerHTML = "";
+
+            // Validate inputs
+            if (!timestampInput) {
+                errorDiv.innerHTML = "Please provide a valid timestamp.";
+                return;
+            }
+
+            if (!/^[0-9a-fA-F]{6}$/.test(machineIdInput)) {
+                errorDiv.innerHTML = "Machine Identifier must be a 6-character hexadecimal string.";
+                return;
+            }
+
+            if (!/^\d+$/.test(processIdInput) || processIdInput < 0 || processIdInput > 65535) {
+                errorDiv.innerHTML = "Process Identifier must be a valid number between 0 and 65535.";
+                return;
+            }
+
+            if (!/^\d+$/.test(counterInput) || counterInput < 0 || counterInput > 16777215) {
+                errorDiv.innerHTML = "Counter must be a valid number between 0 and 16777215.";
+                return;
+            }
+
+            // Encode ObjectId
+            const timestamp = Math.floor(new Date(timestampInput).getTime() / 1000);
+            const machineId = machineIdInput;
+            const processId = parseInt(processIdInput).toString(16).padStart(4, '0');
+            const counter = parseInt(counterInput).toString(16).padStart(6, '0');
+
+            const objectId = timestamp.toString(16).padStart(8, '0') + machineId + processId + counter;
+
+            outputDiv.innerHTML = `
+                <p><strong>Generated ObjectId:</strong> ${objectId}</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>

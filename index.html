@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB ObjectId Tools</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+        }
+        p {
+            line-height: 1.6;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button-container a {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>MongoDB ObjectId Tools</h1>
+
+    <p>Welcome to the MongoDB ObjectId Tools! This toolset provides two main features:</p>
+
+    <ul>
+        <li><strong>ObjectId Decoder:</strong> This tool allows you to input a MongoDB ObjectId and decode it to reveal its underlying components, such as the timestamp, machine identifier, process identifier, and counter.</li>
+        <li><strong>ObjectId Encoder:</strong> This tool allows you to generate a valid MongoDB ObjectId by specifying the components yourself. This can be useful for testing or understanding how ObjectIds are constructed.</li>
+    </ul>
+
+    <p>Select one of the tools below to get started:</p>
+
+    <div class="button-container">
+        <a href="decoder.html">Go to ObjectId Decoder</a>
+        <a href="encoder.html">Go to ObjectId Encoder</a>
+    </div>
+
+    <p>If you are unfamiliar with MongoDB ObjectIds, they are 12-byte identifiers used to uniquely identify documents within a MongoDB collection. These ObjectIds are typically composed of a timestamp, a machine identifier, a process identifier, and a counter. The tools provided here help you understand and manipulate these ObjectIds more effectively.</p>
+
+    <div class="footer">
+        <p>Created by <a href="https://github.com/ExZyle" target="_blank">@ExZyle</a>.</p>
+    </div>
+
+</body>
+</html>
